@@ -8,33 +8,18 @@ def analyz(root):
     if not isDir:
         print(f'path {root} does not exist')
         return None
-
-    new_files = []
-    file_size = []
-    file_type = []
+    id=0
+    combine_list=[]
     for path1,subdirs,files in os.walk(root):
         for name in files:
-            new_files.append(os.path.join(path1,name))
-
-    file_format = []
-    replace=[]
-    split = []
-    for i in new_files:
-        replace=i.replace('\\','/')
-        split=replace.split('.')
-        file_format.append(split[-1])
-        file_size.append(round(os.path.getsize(i) / 1024 / 1024, 2))
-        file_type.append(magic.from_file(i, mime=True))
-
-    # table = {'file_path' :new_files,'file_format' :file_format,'file_size in mb':file_size,'file_type':file_type}
-    # print(tabulate(table, headers='keys', tablefmt='fancy_grid'))
-    ID_list = []
-    starting = 0
-    for i in range(len(new_files)):
-        starting = i+1
-        ID_list.append(starting)
-    combine_list = list(zip(ID_list,new_files,file_format,file_size,file_type))
-
+            full_file_name=os.path.join(path1,name)
+            replace=full_file_name.replace('\\','/')
+            split=replace.split('.')
+            file_format=split[-1]
+            file_size=round(os.path.getsize(full_file_name) / 1024 / 1024, 2)
+            file_type=magic.from_file(full_file_name, mime=True)
+            combine_list.append([id,full_file_name],file_format,file_size,file_type)
+            id=id+1
     try:
         conn = sqlite3.connect('Target.db')
         print('opened database successfully')
