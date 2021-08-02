@@ -18,11 +18,12 @@ def analyz(root):
             file_format=split[-1]
             file_size=round(os.path.getsize(full_file_name) / 1024 / 1024, 2)
             file_type=magic.from_file(full_file_name, mime=True)
-            combine_list.append([id,full_file_name],file_format,file_size,file_type)
+            combine_list.append([id,full_file_name,file_format,file_size,file_type])
             id=id+1
     try:
-        conn = sqlite3.connect('Target.db')
-        print('opened database successfully')
+        DB_name = root.split('\\')[-1] + '.db'
+        conn = sqlite3.connect(DB_name)
+        print(f'database created with name {DB_name}')
         conn.execute('''CREATE TABLE File
         (ID INT PRIMARY KEY NOT NULL,
         file_path TEXT,
